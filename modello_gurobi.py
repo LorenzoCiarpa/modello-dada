@@ -1,23 +1,27 @@
+#IMPORT LIBRARIES
 from gurobipy import Model, GRB
 import numpy as np
 import os
-import time
-from pathlib import Path
-import json
+
+
+#IMPORT FUNCTIONS
 from constants import *
-from utils import generate_t_kog, generate_p_s, generate_p_s_corretto, save_optimal_schedule_to_excel, myCallbacksSolution
+from utils import generate_t_kog, generate_p_s_corretto, myCallbacksSolution
 from read_var import read_init_vars_json
 
+#INIT SEEDS
 np.random.seed(0)
 
 
-
+#CREATE SAVING FOLDER
 if not os.path.exists(resultFolder):
     os.makedirs(resultFolder)
     print(f"Cartella '{resultFolder}' creata.")
 else:
     print(f"Cartella '{resultFolder}' esiste già.")
 
+
+#INIT PARAMETERS
 t_kog = generate_t_kog(f'data/{testFolder}/orario-bk.csv', P, G, O)
 p_s = generate_p_s_corretto(f'data/{testFolder}/prof-settori.csv')
 
@@ -72,9 +76,6 @@ model.addConstrs(
 # Salvare il modello
 # model.write('problem.lp')
 
-# Impostazione del tempo iniziale per il salvataggio periodico
-model._last_save_time = time.time()
-
 #Inizializzazione warm start
 variables = read_init_vars_json('./results/galilei/3/partial_solution_9.json')
 x_start = variables['x']
@@ -101,31 +102,6 @@ z_max = z_max_start
 
 # Avvio dell'ottimizzazione con il callback
 model.optimize(myCallbacksSolution)
-
-# # Estrazione e stampa della soluzione
-# if model.status == GRB.OPTIMAL:
-#     total_y = sum(y[k, l].x for k in range(P) for l in range(N))
-#     print(f"Somma totale di tutte le variabili y: {total_y}")
-
-#     for g in range(G):
-#         for o in range(O):
-#             for k in range(P):
-#                 for l in range(N):
-#                     if x[k, l, o, g].x > 0.5:
-#                         print(f"Professore {k} assegnato all'aula {l} nell'ora {o} del giorno {g}")
-
-#     for k in range(P):
-#         for l in range(N):
-#             if y[k, l].x > 0.5:
-#                 print(f"Aula {l} usata dal professore {k}")
-
-#     # save_optimal_schedule_to_excel(model, x, P, N, O, G, filename=f"{resultFolder}/orario_ottimale-3-obj3.xlsx")
-
-#     objective_value = model.ObjVal
-#     print(f"Valore della funzione obiettivo: {objective_value}")
-
-# else:
-#     print("Non è stata trovata una soluzione ottimale.")
 
 
 # Estrazione e salvataggio dei valori delle variabili al termine dell'ottimizzazione
