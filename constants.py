@@ -12,6 +12,7 @@ gamma = 1
 
 testFolder = 'galilei'
 resultFolder = f'results/{testFolder}'
+runNumber = 3
 
 
 # Creazione del modello

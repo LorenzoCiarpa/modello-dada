@@ -3,14 +3,14 @@ from gurobipy import Model, GRB
 import numpy as np
 import os
 
+#INIT SEEDS
+np.random.seed(0)
 
 #IMPORT FUNCTIONS
 from constants import *
 from utils import generate_t_kog, generate_p_s_corretto, myCallbacksSolution
 from read_var import read_init_vars_json
 
-#INIT SEEDS
-np.random.seed(0)
 
 
 #CREATE SAVING FOLDER
@@ -25,7 +25,6 @@ else:
 t_kog = generate_t_kog(f'data/{testFolder}/orario-bk.csv', P, G, O)
 p_s = generate_p_s_corretto(f'data/{testFolder}/prof-settori.csv')
 
-print(p_s)
 
 
 
@@ -67,7 +66,7 @@ model.addConstrs(
     name="v5"
 )
 
-# Vincolo 7: Condizione di utilizzo dell'aula l per il settore s
+# Vincolo 6: Condizione di utilizzo dell'aula l per il settore s
 model.addConstrs(
     (u[l, s] >= y[k, l] for l in range(N) for s in range(S) for k in p_s[s]),
     name="v7"
