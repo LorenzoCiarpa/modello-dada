@@ -49,7 +49,7 @@
     'Gaveglia' : ITA-GEOST, ITAL
     'Gentile' : INFORM
     'Gerra' : FILOS, STO-FILO 
-    'GUALTIERI' : MAT-FIS, SCIENZE
+    'GUALTIERI' : SCIENZE
     'Guerriero' : STO-FILO
     'Guerrini' : DIS
     'Impicciatore' : DIS, DIS CLIL

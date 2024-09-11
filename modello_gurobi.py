@@ -75,6 +75,7 @@ model.addConstrs(
 # Salvare il modello
 # model.write('problem.lp')
 
+'''
 #Inizializzazione warm start
 variables = read_init_vars_json('./results/galilei/3/partial_solution_9.json')
 x_start = variables['x']
@@ -98,6 +99,7 @@ for idx in u_start.keys():
     u[k,l].Start = u_start[idx]
 
 z_max = z_max_start
+'''
 
 # Avvio dell'ottimizzazione con il callback
 model.optimize(myCallbacksSolution)
