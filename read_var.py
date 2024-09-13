@@ -150,17 +150,26 @@ if __name__ == '__main__':
 
 
     from data.galilei.dizionario_professori import prof_to_idx 
-    idx_to_prof = {v: k for k,v in prof_to_idx.items()}
+    import pandas as pd
+    from constants import *
+
+    df = pd.read_csv(f'data/{testFolder}/{settoreFile}')
+    
+    # Recupera le classi che soddisfano il filtro
+
+    idx_to_prof = {v: k for k, v in prof_to_idx.items()}
     prof_classi = {}
 
     for idx, elem in enumerate(y_max):
-        prof_classi[idx_to_prof[idx+1]] = elem
+        filtro = (df['Professore'] == idx_to_prof[idx + 1]) 
+        settore = df.loc[filtro, 'Settore']
+        
+
+        prof_classi[idx_to_prof[idx+1]] = str([elem, settore.values[0]])
 
     print(prof_classi)
     with open('prof_classi.json', 'w') as json_file:
         json.dump(prof_classi, json_file, indent=4)
-
-
 
 
 
