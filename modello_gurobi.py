@@ -22,8 +22,8 @@ else:
 
 
 #INIT PARAMETERS
-t_kog = generate_t_kog(f'data/{testFolder}/orario-bk.csv', P, G, O)
-p_s = generate_p_s_corretto(f'data/{testFolder}/prof-settori.csv')
+t_kog = generate_t_kog(f'data/{testFolder}/{orarioFile}', P, G, O)
+p_s = generate_p_s_corretto(f'data/{testFolder}/{settoreFile}')
 
 
 
@@ -31,8 +31,9 @@ p_s = generate_p_s_corretto(f'data/{testFolder}/prof-settori.csv')
 # Funzione obiettivo: minimizzare il numero di aule associate, la differenza tra aule assegnate e il numero di settori per aula
 model.setObjective(
     alpha * sum(y[k, l] for k in range(P) for l in range(N)) + 
-    beta * z_max + 
-    gamma * sum(u[l, s] for l in range(N) for s in range(S)),
+    beta * z_max,
+    # beta * z_max + 
+    # gamma * sum(u[l, s] for l in range(N) for s in range(S)),
     GRB.MINIMIZE
 )
 
@@ -69,11 +70,17 @@ model.addConstrs(
 # Vincolo 6: Condizione di utilizzo dell'aula l per il settore s
 model.addConstrs(
     (u[l, s] >= y[k, l] for l in range(N) for s in range(S) for k in p_s[s]),
+    name="v6"
+)
+
+# Vincolo 7: Condizione di vincolo che un aula è assegnata ad un solo settore
+model.addConstrs(
+    (u.sum(l, '*') == 1 for l in range(N)),
     name="v7"
 )
 
 # Salvare il modello
-# model.write('problem.lp')
+# model.write('./problem_formulations/problem_new.lp')
 
 '''
 #Inizializzazione warm start

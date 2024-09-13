@@ -85,11 +85,13 @@ def read_init_vars_json(path):
 
 if __name__ == '__main__':
     # x_values, y_values, u_values, z_values = read_init_vars('./results/galilei/2/partial_solution_20240903-075039.txt')
-    variables = read_init_vars_json('./results/galilei/3/partial_solution_9.json')
+    variables = read_init_vars_json('./results/galilei/4/partial_solution_23.json')
     x_values = variables['x']
     y_values = variables['y']
     u_values = variables['u']
     z_max_values = variables['z_max']
+
+    # y_values = {eval(k): v for k, v in y_values.items()}
 
     # print(z_max_values)
     # print(x_values.keys())
@@ -141,10 +143,24 @@ if __name__ == '__main__':
     print(y_max)    
     print(min(y_max))
 
-    print(f"obj_fun: {u_sum + y_sum + z_max_values}")
+    print(f"obj_fun: {y_sum + z_max_values}")
 
     y_max = np.array(y_max)
     print(y_max.argmin())
+
+
+    from data.galilei.dizionario_professori import prof_to_idx 
+    idx_to_prof = {v: k for k,v in prof_to_idx.items()}
+    prof_classi = {}
+
+    for idx, elem in enumerate(y_max):
+        prof_classi[idx_to_prof[idx+1]] = elem
+
+    print(prof_classi)
+    with open('prof_classi.json', 'w') as json_file:
+        json.dump(prof_classi, json_file, indent=4)
+
+
 
 
 

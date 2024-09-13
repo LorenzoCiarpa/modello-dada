@@ -13,6 +13,8 @@ gamma = 1
 testFolder = 'galilei'
 resultFolder = f'results/{testFolder}'
 runNumber = 3
+orarioFile = 'orario-bk.csv'
+settoreFile = 'new_Professore_Settore.csv'
 
 
 # Creazione del modello
