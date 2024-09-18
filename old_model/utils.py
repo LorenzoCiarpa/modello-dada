@@ -6,11 +6,10 @@ from pathlib import Path
 
 from data.galilei.dizionario_professori import prof_to_idx
 from constants import *
-from new_parameters import classi_to_idx
 
 
 
-def generate_t_kogc(orario_file, P, G, O):
+def generate_t_kog(orario_file, P, G, O):
     # Leggere il file CSV
     df = pd.read_csv(orario_file)
 
@@ -24,20 +23,19 @@ def generate_t_kogc(orario_file, P, G, O):
     }
 
     # Creare la matrice t_kog con zeri
-    t_kogc = np.zeros((P, O, G, C), dtype=int)
+    t_kog = np.zeros((P, O, G), dtype=int)
 
-    # Popolare la matrice t_kogc
+    # Popolare la matrice t_kog
     for idx, row in df.iterrows():
             
         professore = int(prof_to_idx[row['Professore']]) - 1
         giorno = day_map[row['Giorno']]
         ora = int(row['Ora']) - 1
-        classe = int(classi_to_idx[row['Classe']])
 
 
-        t_kogc[professore, ora, giorno, classe] = 1
+        t_kog[professore, ora, giorno] = 1
 
-    return t_kogc
+    return t_kog
 
 def generate_p_s_corretto(settori_file):
     # Leggere il file CSV
@@ -58,15 +56,7 @@ def generate_p_s_corretto(settori_file):
 
     return p_s
 
-def generate_l_f():
 
-    l_f = {
-        0: list(range(0, 18)),
-        1: list(range(18, 36)),
-        2: list(range(36, 53))
-    }
-
-    return l_f
 
 
 
@@ -86,7 +76,6 @@ def save_partial_solution(model):
     x = vars['x']
     y = vars['y']
     u = vars['u']
-    w = vars['w']
     z_max = vars['z_max']
 
     solution = {}
@@ -97,9 +86,8 @@ def save_partial_solution(model):
         for l in range(N):
             for o in range(O):
                 for g in range(G):
-                    for c in range(C):
-                        val = model.cbGetSolution(x[k, l, o, g, c])
-                        solution['x'][(k, l, o, g, c)] = val
+                    val = model.cbGetSolution(x[k, l, o, g])
+                    solution['x'][(k, l, o, g)] = val
 
     solution['x'] = {str(key): value for key, value in solution['x'].items()}
 
@@ -121,23 +109,12 @@ def save_partial_solution(model):
     
     solution['u'] = {str(key): value for key, value in solution['u'].items()}
 
-    # Salvare i valori delle variabili u
-    solution['w'] = {}
-    for f in range(F):
-        for c in range(C):
-            for g in range(G):
-                val = model.cbGetSolution(w[f, c, g])
-                solution['w'][(f, c, g)] = val
-            
-    
-    solution['w'] = {str(key): value for key, value in solution['w'].items()}
-
     # Salvare il valore di z_max
     solution['z_max'] = model.cbGetSolution(z_max)
 
     solution['obj_fun'] = model.cbGet(GRB.Callback.MIPSOL_OBJBST)
 
-    # Salvare il gap
+     # Salvare il gap
     best_solution = model.cbGet(GRB.Callback.MIPSOL_OBJBST)  # Best found solution
     best_bound = model.cbGet(GRB.Callback.MIPSOL_OBJBND)     # Best bound (lower/upper)
     mip_gap = abs(best_solution - best_bound) / max(1e-10, abs(best_solution))

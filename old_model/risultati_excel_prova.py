@@ -33,7 +33,6 @@ classi = [
 '''
 
 aule = [ f"Aula{i}" for i in range(53)]
-aule = [ f"Aula{i}" for i in range(53)]
 
 
 # Definiamo i giorni e le ore settimanali (lunedì-ven 1-8 ore)
@@ -54,7 +53,7 @@ giorni_ore = ['LUN0', 'LUN1', 'LUN2', 'LUN3', 'LUN4', 'LUN5', 'LUN6', 'LUN7',
 '''
 
 
-variables = read_init_vars_json('./results/galilei/5/partial_solution_6.json')
+variables = read_init_vars_json('./results/galilei/3/partial_solution_23.json')
 x_values = variables['x']
 x_values = {eval(k): v for k, v in x_values.items()}
 
@@ -79,14 +78,13 @@ def trova_classe(giorno, ora, professore):
         return "None"
 
 
-for (professore, aula, ora, giorno, cls), value in x_values.items():
+for (professore, aula, ora, giorno), value in x_values.items():
 
     if value == 1.0:  # Consideriamo solo i valori dove il professore insegna
         giorno_ora_label = f"{giorni_settimana[giorno]}{ora + 1}"  # Es: LUN1, MAR3
         # Assegniamo il professore e l'aula alla cella corrispondente
         # Supponiamo che la classe sia in funzione dell'aula (puoi adattarlo se serve)
-        # classe = aule[aula]  # Questo associa l'aula alla classe
-        classe = f"Aula{cls}"  # Questo associa l'aula alla classe
+        classe = aule[aula]  # Questo associa l'aula alla classe
         df.loc[giorno_ora_label, classe] = f"Prof {professore} (Classe {trova_classe(giorno, ora, professore)})"
 
 # Esportiamo il DataFrame in Excel
