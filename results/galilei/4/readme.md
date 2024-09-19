@@ -1,0 +1,1 @@
+Soluzioni mezze buone con 3 settori invece di 7

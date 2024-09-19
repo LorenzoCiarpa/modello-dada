@@ -6,7 +6,7 @@ N = 53  # Numero di aule (uguale al numero di classi)
 C = 53  # Numero di classi (uguale al numero di classi)
 G = 5  # Numero di giorni
 O = 8  # Numero di ore per giorno
-S = 3  # Numero di settori
+S = 7  # Numero di settori
 F = 3  # Numero di piani
 
 alpha = 1 / 100

@@ -87,7 +87,7 @@ def read_init_vars_json(path):
 
 if __name__ == '__main__':
     # x_values, y_values, u_values, z_values = read_init_vars('./results/galilei/2/partial_solution_20240903-075039.txt')
-    variables = read_init_vars_json('./results/galilei/5/partial_solution_6.json')
+    variables = read_init_vars_json('./results/galilei/6/partial_solution_5.json')
     x_values = variables['x']
     y_values = variables['y']
     u_values = variables['u']
@@ -159,27 +159,27 @@ if __name__ == '__main__':
     print(y_max.argmin())
 
 
-    from data.galilei.dizionario_professori import prof_to_idx 
-    import pandas as pd
-    from constants import *
+    # from data.galilei.dizionario_professori import prof_to_idx 
+    # import pandas as pd
+    # from constants import *
 
-    df = pd.read_csv(f'data/{testFolder}/{settoreFile}')
+    # df = pd.read_csv(f'data/{testFolder}/{settoreFile}')
     
-    # Recupera le classi che soddisfano il filtro
+    # # Recupera le classi che soddisfano il filtro
 
-    idx_to_prof = {v: k for k, v in prof_to_idx.items()}
-    prof_classi = {}
+    # idx_to_prof = {v: k for k, v in prof_to_idx.items()}
+    # prof_classi = {}
 
-    for idx, elem in enumerate(y_max):
-        filtro = (df['Professore'] == idx_to_prof[idx + 1]) 
-        settore = df.loc[filtro, 'Settore']
+    # for idx, elem in enumerate(y_max):
+    #     filtro = (df['Professore'] == idx_to_prof[idx + 1]) 
+    #     settore = df.loc[filtro, 'Settore']
         
 
-        prof_classi[idx_to_prof[idx+1]] = str([elem, settore.values[0]])
+    #     prof_classi[idx_to_prof[idx+1]] = str([elem, settore.values[0]])
 
-    print(prof_classi)
-    with open('prof_classi.json', 'w') as json_file:
-        json.dump(prof_classi, json_file, indent=4)
+    # print(prof_classi)
+    # with open('prof_classi.json', 'w') as json_file:
+    #     json.dump(prof_classi, json_file, indent=4)
 
 
 
