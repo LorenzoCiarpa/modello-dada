@@ -2,6 +2,8 @@ import re
 import json
 import numpy as np
 
+from constants import *
+
 # Definisci i range degli indici per ogni variabile
 k_range = range(102)  # 0 to 101
 l_range = range(53)   # 0 to 52
@@ -85,10 +87,11 @@ def read_init_vars_json(path):
 
 if __name__ == '__main__':
     # x_values, y_values, u_values, z_values = read_init_vars('./results/galilei/2/partial_solution_20240903-075039.txt')
-    variables = read_init_vars_json('./results/galilei/4/partial_solution_23.json')
+    variables = read_init_vars_json('./results/galilei/6/partial_solution_5.json')
     x_values = variables['x']
     y_values = variables['y']
     u_values = variables['u']
+    w_values = variables['w']
     z_max_values = variables['z_max']
 
     # y_values = {eval(k): v for k, v in y_values.items()}
@@ -128,8 +131,15 @@ if __name__ == '__main__':
         for j in range(3):
             u_sum += u_values[f"{i,j}"]
 
+    w_sum = 0
+    for f in range(F):
+        for c in range(C):
+            for g in range(G):
+                w_sum += w_values[f"{f,c,g}"]
+
     print(f"y_sum: {y_sum}")
     print(f"u_sum: {u_sum}")
+    print(f"w_sum: {w_sum}")
     print(f"z_max: {z_max_values}")
 
     y_max = []
@@ -143,33 +153,33 @@ if __name__ == '__main__':
     print(y_max)    
     print(min(y_max))
 
-    print(f"obj_fun: {y_sum + z_max_values}")
+    print(f"obj_fun: {y_sum + z_max_values + w_sum}")
 
     y_max = np.array(y_max)
     print(y_max.argmin())
 
 
-    from data.galilei.dizionario_professori import prof_to_idx 
-    import pandas as pd
-    from constants import *
+    # from data.galilei.dizionario_professori import prof_to_idx 
+    # import pandas as pd
+    # from constants import *
 
-    df = pd.read_csv(f'data/{testFolder}/{settoreFile}')
+    # df = pd.read_csv(f'data/{testFolder}/{settoreFile}')
     
-    # Recupera le classi che soddisfano il filtro
+    # # Recupera le classi che soddisfano il filtro
 
-    idx_to_prof = {v: k for k, v in prof_to_idx.items()}
-    prof_classi = {}
+    # idx_to_prof = {v: k for k, v in prof_to_idx.items()}
+    # prof_classi = {}
 
-    for idx, elem in enumerate(y_max):
-        filtro = (df['Professore'] == idx_to_prof[idx + 1]) 
-        settore = df.loc[filtro, 'Settore']
+    # for idx, elem in enumerate(y_max):
+    #     filtro = (df['Professore'] == idx_to_prof[idx + 1]) 
+    #     settore = df.loc[filtro, 'Settore']
         
 
-        prof_classi[idx_to_prof[idx+1]] = str([elem, settore.values[0]])
+    #     prof_classi[idx_to_prof[idx+1]] = str([elem, settore.values[0]])
 
-    print(prof_classi)
-    with open('prof_classi.json', 'w') as json_file:
-        json.dump(prof_classi, json_file, indent=4)
+    # print(prof_classi)
+    # with open('prof_classi.json', 'w') as json_file:
+    #     json.dump(prof_classi, json_file, indent=4)
 
 
 

@@ -22,7 +22,7 @@ idx_to_prof = {
 
 
 # Supponiamo di avere le classi già definite manualmente
-'''
+
 classi = [
     '1A', '1B', '1C', '1D', '1E', '1F', '1G', '1H', '1ILS', '1M', '1N',
     '2A', '2B', '2C', '2D', '2E', '2F', '2G', '2H', '2ILS', '2LLS', '2M', '2N',
@@ -30,7 +30,7 @@ classi = [
     '4A', '4B', '4C', '4D', '4E', '4F', '4G', '4H', '4ILS', '4LLS',
     '5A', '5B', '5C', '5D', '5E', '5F', '5G', '5H', '5ILS', '5LLS'
 ]
-'''
+
 
 aule = [ f"Aula{i}" for i in range(53)]
 
@@ -53,7 +53,7 @@ giorni_ore = ['LUN0', 'LUN1', 'LUN2', 'LUN3', 'LUN4', 'LUN5', 'LUN6', 'LUN7',
 '''
 
 
-variables = read_init_vars_json('./results/galilei/3/partial_solution_23.json')
+variables = read_init_vars_json('./results/galilei/5/partial_solution_6.json')
 x_values = variables['x']
 x_values = {eval(k): v for k, v in x_values.items()}
 
@@ -78,16 +78,18 @@ def trova_classe(giorno, ora, professore):
         return "None"
 
 
-for (professore, aula, ora, giorno), value in x_values.items():
+for (professore, aula, ora, giorno, cls), value in x_values.items():
 
     if value == 1.0:  # Consideriamo solo i valori dove il professore insegna
         giorno_ora_label = f"{giorni_settimana[giorno]}{ora + 1}"  # Es: LUN1, MAR3
         # Assegniamo il professore e l'aula alla cella corrispondente
         # Supponiamo che la classe sia in funzione dell'aula (puoi adattarlo se serve)
-        classe = aule[aula]  # Questo associa l'aula alla classe
-        df.loc[giorno_ora_label, classe] = f"Prof {professore} (Classe {trova_classe(giorno, ora, professore)})"
+        AULA = aule[aula]  # Questo associa l'aula alla classe
+        # classe = f"Aula{cls}"  # Questo associa l'aula alla classe
+        df.loc[giorno_ora_label, AULA] = f"Prof {professore} (Classe {trova_classe(giorno, ora, professore)})"
+        # df.loc[giorno_ora_label, AULA] = f"Prof {professore} (Classe {classi[cls]})"
 
 # Esportiamo il DataFrame in Excel
-df.to_excel('./orario_scolastico_new.xlsx', index=True)
+df.to_excel('./orario_scolastico_new_2.xlsx', index=True)
 
-print("Orario esportato correttamente in orario_scolastico_new.xlsx")
+print("Orario esportato correttamente in orario_scolastico_new_2.xlsx")
